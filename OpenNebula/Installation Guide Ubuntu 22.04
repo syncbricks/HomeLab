@@ -1,0 +1,46 @@
+First Enable add and enable the Reponsitories
+ # echo "deb [signed-by=/etc/apt/keyrings/opennebula.gpg] https://<token>@enterprise.opennebula.io/repo/6.10/Ubuntu/24.04 stable opennebula" > /etc/apt/sources.list.d/opennebula.list
+
+Now install the required pacakges
+
+# apt-get update
+# apt-get -y install gnupg wget apt-transport-https
+
+
+Now ensure that the the keys are downloaded
+# sudo wget -q -O- https://downloads.opennebula.io/repo/repo2.key | gpg --dearmor --yes --output /etc/apt/keyrings/opennebula.gpg
+Now Downlaod OpenNebula
+ # echo "deb [signed-by=/etc/apt/keyrings/opennebula.gpg] https://downloads.opennebula.io/repo/6.10/Ubuntu/22.04 stable opennebula" > /etc/apt/sources.list.d/opennebula.list
+ # apt-get update
+
+Now Install OpenNebula
+# apt-get update
+# apt-get -y install opennebula opennebula-fireedge opennebula-gate opennebula-flow opennebula-provision
+
+Start OpenNebula Services
+# systemctl start opennebula opennebula-fireedge opennebula-gate opennebula-flow
+
+Enable OpenNebula Services
+# systemctl enable opennebula opennebula-fireedge opennebula-gate opennebula-flow
+
+Configuring OpenNebula
+OpenNebula’s initial deployment on first usage creates a user oneadmin inside the OpenNebula (not to be confused with system user oneadmin in the Front-end operating system!) based on a randomly generated password read from /var/lib/one/.one/one_auth. To set your own user password from the very beginning, proceed with the following steps before starting the services:
+
+Log in as the oneadmin system user with this command:
+
+sudo -u oneadmin /bin/sh
+Create file /var/lib/one/.one/one_auth with initial password in the format oneadmin:<password>
+
+echo 'oneadmin:changeme123' > /var/lib/one/.one/one_auth
+
+Verify Installation
+# oneuser show
+
+Now you can try to log in through the Sunstone GUI and Provision GUI. To do so, point your browser to
+http://<frontend_address>:2616/fireedge/sunstone
+
+to access to Sunstone and point your browser to
+http://<frontend_address>:2616/fireedge/provision 
+
+to access to Provision. 
+ou should get to the login page in both cases. The access user is oneadmin and initial (or customized) password is the one from the file /var/lib/one/.one/one_auth on your Front-end.
